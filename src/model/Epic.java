@@ -12,6 +12,7 @@ public class Epic extends Task {
     public void addSubTask(SubTask subTask) {
         subTask.setEpicId(getId());
         subTasks.add(subTask);
+        calculateEpicStatus();
     }
     public ArrayList<SubTask> getSubTasks() {
         return subTasks;
@@ -19,6 +20,7 @@ public class Epic extends Task {
 
     public void removeTask(SubTask subTask) {
         subTasks.remove(subTask);
+        calculateEpicStatus();
     }
     public void calculateEpicStatus() {
         boolean isdone = true;
