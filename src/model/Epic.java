@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Epic extends Task {
     private final ArrayList<SubTask> subTasks = new ArrayList<>();
+
     public Epic(String name, TaskStatus status, String description) {
         super(name, status, description);
     }
@@ -14,6 +15,7 @@ public class Epic extends Task {
         subTasks.add(subTask);
         calculateEpicStatus();
     }
+
     public ArrayList<SubTask> getSubTasks() {
         return subTasks;
     }
@@ -22,18 +24,19 @@ public class Epic extends Task {
         subTasks.remove(subTask);
         calculateEpicStatus();
     }
+
     public void calculateEpicStatus() {
         boolean isdone = true;
         boolean isnew = true;
-        for(SubTask sTask : subTasks) {
-            if(sTask.getStatus() != TaskStatus.DONE) {
+        for (SubTask sTask : subTasks) {
+            if (sTask.getStatus() != TaskStatus.DONE) {
                 isdone = false;
             }
-            if(sTask.getStatus() != TaskStatus.NEW) {
+            if (sTask.getStatus() != TaskStatus.NEW) {
                 isnew = false;
             }
         }
-        if(isnew) {
+        if (isnew) {
             setStatus(TaskStatus.NEW);
             return;
         }

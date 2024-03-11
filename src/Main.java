@@ -23,6 +23,7 @@ public class Main {
         epic2.addSubTask(taskManager.createSubTask(new SubTask("Новый subtask", TaskStatus.NEW, "описание")));
         taskManager.updateEpic(epic2);
         System.out.println("Create Epic with 1 subtask: " +  epic2);
+
         taskManager.deleteTask(task.getId());
         taskManager.deleteEpic(epic.getId());
 

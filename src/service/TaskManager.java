@@ -13,9 +13,11 @@ public class TaskManager {
     private final HashMap<Integer, Epic> epics;
     private final HashMap<Integer, SubTask> subtasks;
     private int seq = 0;
+
     private int generateId() {
         return ++seq;
     }
+
     public TaskManager() {
         this.tasks = new HashMap<>();
         this.epics = new HashMap<>();
@@ -32,9 +34,11 @@ public class TaskManager {
     public Task getTask(int id) {
         return tasks.get(id);
     }
+
     public void deleteTask(int id) {
         tasks.remove(id);
     }
+
     public void updateTask(Task task) {
         tasks.put(task.getId(), task);
     }
@@ -44,9 +48,11 @@ public class TaskManager {
         epics.put(epic.getId(), epic);
         return epic;
     }
+
     public Task getEpic(int id) {
         return epics.get(id);
     }
+
     public void deleteEpic(int id) {
         Epic removedEpic = epics.remove(id);
         if (removedEpic == null) {
@@ -59,6 +65,7 @@ public class TaskManager {
         });
 
     }
+
     public void updateEpic(Epic epic) {
         Epic saved = epics.get(epic.getId());
         saved.setName(epic.getName());
@@ -70,9 +77,11 @@ public class TaskManager {
         subtasks.put(task.getId(), task);
         return task;
     }
+
     public SubTask getSubTask(int id) {
         return subtasks.get(id);
     }
+
     public void updateSubTask(SubTask subTask) {
         subtasks.put(subTask.getId(), subTask);
         Integer epicId = subTask.getEpicId();
@@ -80,6 +89,7 @@ public class TaskManager {
 
         updateEpic(savedEpic);
     }
+
     public void deleteSubTask(int id) {
         SubTask removedSubTask = subtasks.remove(id);
         if (removedSubTask == null) {
@@ -90,6 +100,7 @@ public class TaskManager {
         Epic epicSaved = epics.get(epicId);
         epicSaved.removeTask(removedSubTask);
     }
+
     public void deleteAll() {
         tasks.clear();
         epics.clear();
