@@ -79,6 +79,10 @@ public class TaskManager {
     public SubTask createSubTask(SubTask task) {
         task.setId(generateId());
         subtasks.put(task.getId(), task);
+        int epicId = task.getEpicId();
+        if (epicId != 0) {
+            epics.get(epicId).addSubTask(task);
+        }
         return task;
     }
 

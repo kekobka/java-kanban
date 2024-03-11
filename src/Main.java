@@ -13,8 +13,9 @@ public class Main {
         Task task2 = taskManager.createTask(new Task("Новая задача2", TaskStatus.NEW, "описание 2"));
 
         Epic epic = taskManager.createEpic(new Epic("Новый эпик ", TaskStatus.NEW, "описание"));
-        epic.addSubTask(taskManager.createSubTask(new SubTask("подзадача1", TaskStatus.NEW, "sub1")));
-        epic.addSubTask(taskManager.createSubTask(new SubTask("подзадача2", TaskStatus.IN_PROGRESS, "sub2")));
+
+        taskManager.createSubTask(new SubTask("подзадача1", TaskStatus.IN_PROGRESS, "sub1", epic.getId()));
+        epic.addSubTask(taskManager.createSubTask(new SubTask("подзадача2", TaskStatus.NEW, "sub2")));
         taskManager.updateEpic(epic);
         System.out.println(epic);
         System.out.println("Create Epic with 2 subtask: " + epic);
@@ -25,7 +26,7 @@ public class Main {
         System.out.println("Create Epic with 1 subtask: " +  epic2);
 
         taskManager.deleteTask(task.getId());
-        taskManager.deleteEpic(epic.getId());
+        taskManager.deleteAllEpic();
 
         System.out.println(taskManager);
     }
