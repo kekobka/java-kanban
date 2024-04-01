@@ -57,6 +57,7 @@ public class Task {
     public int hashCode() {
         return id;
     }
+
     @Override
     public Task clone() {
         Task task = new Task(name, status, desc);

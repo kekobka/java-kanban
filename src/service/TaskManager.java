@@ -21,7 +21,7 @@ public interface TaskManager {
 
     int addNewEpic(Epic epic);
 
-    Task getEpic(int id);
+    Epic getEpic(int id);
 
     void deleteEpic(int id);
 
@@ -44,10 +44,13 @@ public interface TaskManager {
     void deleteAllEpic();
 
     void deleteAllSubTask();
+
     List<Task> getHistory();
 
     HashMap<Integer, Task> getTasks();
+
     HashMap<Integer, Epic> getEpics();
+
     HashMap<Integer, SubTask> getSubTasks();
 
 }

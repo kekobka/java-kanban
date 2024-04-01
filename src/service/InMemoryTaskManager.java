@@ -1,12 +1,12 @@
 package service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import model.Epic;
 import model.SubTask;
 import model.Task;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks;
@@ -14,9 +14,11 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, SubTask> subtasks;
     private final HistoryManager historyManager;
     private int seq = 0;
+
     private int generateId() {
         return ++seq;
     }
+
     public InMemoryTaskManager(HistoryManager history) {
         this.historyManager = history;
         this.tasks = new HashMap<>();
@@ -90,6 +92,7 @@ public class InMemoryTaskManager implements TaskManager {
         saved.setName(epic.getName());
         epic.calculateEpicStatus();
     }
+
     @Override
     public ArrayList<SubTask> getEpicSubTasks(int id) {
         return epics.get(id).getSubTasks();

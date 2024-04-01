@@ -19,7 +19,6 @@ public class Main {
         int epicId = taskManager.addNewEpic(epic);
 
         SubTask subtask = new SubTask("подзадача1", TaskStatus.IN_PROGRESS, "sub1", epic.getId());
-        epic.addSubTask(subtask);
         taskManager.addNewSubTask(subtask);
 
         taskManager.addNewSubTask(new SubTask("подзадача2", TaskStatus.NEW, "sub2", epicId));
@@ -28,20 +27,18 @@ public class Main {
         Epic epic2 = new Epic("Новый эпик 2", TaskStatus.NEW, "описание");
         int epicId2 = taskManager.addNewEpic(epic2);
 
-        SubTask subtask2 = new SubTask("Новый subtask", TaskStatus.NEW, "описание", epicId);
-        epic2.addSubTask(subtask2);
+        SubTask subtask2 = new SubTask("Новый subtask", TaskStatus.NEW, "описание", epicId2);
         int subtaskId2 = taskManager.addNewSubTask(subtask2);
         Task _task = taskManager.getTask(taskId); // task@1 in history
-        Task _epic = taskManager.getEpic(epicId2); // epic in history
-        Task _subtask = taskManager.getSubTask(subtaskId2); // epic in history
+        Task _epic = taskManager.getEpic(epicId2); // Epic{subTasks=[SubTask@7], status=NEW} in history
+        Task _subtask = taskManager.getSubTask(subtaskId2); // SubTask@7 in history
         taskManager.updateEpic(epic2);
 
 
         taskManager.deleteTask(taskId);
-        taskManager.deleteAllEpic();
-
         printAllTasks(taskManager);
     }
+
     private static void printAllTasks(TaskManager manager) {
         System.out.println("Задачи:");
         for (Map.Entry<Integer, Task> task : manager.getTasks().entrySet()) {

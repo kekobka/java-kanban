@@ -51,12 +51,13 @@ public class Epic extends Task {
     public Epic clone() {
         Epic task = new Epic(getName(), getStatus(), getDesc());
         task.setId(getId());
-        for(SubTask t : getSubTasks()) {
+        for (SubTask t : getSubTasks()) {
             task.addSubTask(t);
         }
         task.calculateEpicStatus();
         return task;
     }
+
     @Override
     public String toString() {
         return "Epic{" +
