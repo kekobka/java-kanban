@@ -22,7 +22,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     // remove by internal list id
     @Override
     public void remove(int id) {
-        if (id < 0 || id > history.size() - 2) {
+        if (id < 0 || id >= history.size()) {
             return;
         }
         history.remove(id);
