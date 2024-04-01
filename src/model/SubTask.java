@@ -20,4 +20,10 @@ public class SubTask extends Task {
     public void setEpicId(int epicId) {
         this.epicId = epicId;
     }
+    @Override
+    public SubTask clone() {
+        SubTask task = new SubTask(getName(),getStatus(), getDesc(), epicId);
+        task.setId(getId());
+        return task;
+    }
 }
