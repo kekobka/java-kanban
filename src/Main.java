@@ -29,9 +29,9 @@ public class Main {
 
         SubTask subtask2 = new SubTask("Новый subtask", TaskStatus.NEW, "описание", epicId2);
         int subtaskId2 = taskManager.addNewSubTask(subtask2);
-        Task _task = taskManager.getTask(taskId); // task@1 in history
-        Task _epic = taskManager.getEpic(epicId2); // Epic{subTasks=[SubTask@7], status=NEW} in history
-        Task _subtask = taskManager.getSubTask(subtaskId2); // SubTask@7 in history
+        Task taskUseless = taskManager.getTask(taskId); // task@1 in history
+        Task epicUseless = taskManager.getEpic(epicId2); // Epic{subTasks=[SubTask@7], status=NEW} in history
+        Task subtaskUseless = taskManager.getSubTask(subtaskId2); // SubTask@7 in history
         taskManager.updateEpic(epic2);
 
 
