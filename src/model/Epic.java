@@ -1,6 +1,8 @@
 package model;
 
+
 import java.util.ArrayList;
+
 
 public class Epic extends Task {
     private final ArrayList<SubTask> subTasks = new ArrayList<>();
@@ -60,9 +62,14 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" +
-                "subTasks=" + subTasks +
-                ", status=" + this.getStatus() +
-                '}';
+        StringBuilder subtasks = new StringBuilder();
+        if (!getSubTasks().isEmpty()) {
+            subtasks.append(",").append(getSubTasks().getFirst().getId());
+            for (int i = 1; i < getSubTasks().size(); ++i) {
+                SubTask t = getSubTasks().get(i);
+                subtasks.append(",").append(t.getId());
+            }
+        }
+        return "EPIC," + getId() + "," + getDesc() + "," + getStatus() + subtasks;
     }
 }

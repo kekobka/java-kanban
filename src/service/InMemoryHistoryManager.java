@@ -31,6 +31,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         private Node head;
         private Node tail;
 
+
         private void linkLast(Task task) {
             Node element = new Node();
             element.setTask(task);
@@ -121,6 +122,13 @@ public class InMemoryHistoryManager implements HistoryManager {
                 this.next = next;
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        HistoryManager manager = (HistoryManager) o;
+        return getHistory().equals(manager.getHistory());
     }
 }
 

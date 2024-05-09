@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final HashMap<Integer, Task> tasks;
-    private final HashMap<Integer, Epic> epics;
-    private final HashMap<Integer, SubTask> subtasks;
+    protected final HashMap<Integer, Task> tasks;
+    protected final HashMap<Integer, Epic> epics;
+    protected final HashMap<Integer, SubTask> subtasks;
     private final HistoryManager historyManager;
     private int seq = 0;
 
@@ -186,6 +186,13 @@ public class InMemoryTaskManager implements TaskManager {
                 ", epics=" + epics +
                 ", subtasks=" + subtasks +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskManager manager = (TaskManager) o;
+        return tasks.equals(manager.getTasks()) && epics.equals(manager.getEpics()) && subtasks.equals(manager.getSubTasks());
     }
 
     public HashMap<Integer, Task> getTasks() {
