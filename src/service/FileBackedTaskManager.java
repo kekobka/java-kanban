@@ -1,10 +1,12 @@
 package service;
 
-import model.*;
+import exception.ManagerSaveException;
+import model.Epic;
+import model.SubTask;
+import model.Task;
 
 import java.io.*;
 import java.util.Map;
-
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -49,6 +51,42 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
+    public void updateSubTask(SubTask subTask) {
+        super.updateSubTask(subTask);
+        save();
+    }
+
+    @Override
+    public void deleteSubTask(int id) {
+        super.deleteSubTask(id);
+        save();
+    }
+
+    @Override
+    public void deleteAll() {
+        super.deleteAll();
+        save();
+    }
+
+    @Override
+    public void deleteAllTask() {
+        super.deleteAllTask();
+        save();
+    }
+
+    @Override
+    public void deleteAllEpic() {
+        super.deleteAllEpic();
+        save();
+    }
+
+    @Override
+    public void deleteAllSubTask() {
+        super.deleteAllSubTask();
+        save();
+    }
+
+    @Override
     public int addNewTask(Task task) {
         int ret = super.addNewTask(task);
         save();
@@ -56,10 +94,34 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
+    public void deleteTask(int id) {
+        super.deleteTask(id);
+        save();
+    }
+
+    @Override
+    public void updateTask(Task task) {
+        super.updateTask(task);
+        save();
+    }
+
+    @Override
     public int addNewEpic(Epic epic) {
         int ret = super.addNewEpic(epic);
         save();
         return ret;
+    }
+
+    @Override
+    public void deleteEpic(int id) {
+        super.deleteEpic(id);
+        save();
+    }
+
+    @Override
+    public void updateEpic(Epic epic) {
+        super.updateEpic(epic);
+        save();
     }
 
     private void loadFromFile() {
@@ -82,7 +144,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ManagerSaveException(e.getMessage());
         }
     }
 
@@ -101,7 +163,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 writer.newLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Ошибка в файле: " + file.getAbsolutePath(), e);
+            throw new ManagerSaveException("Ошибка: " + e.getMessage() + " в файле: " + file.getAbsolutePath());
         }
     }
 }

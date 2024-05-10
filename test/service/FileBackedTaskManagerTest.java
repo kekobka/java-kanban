@@ -9,6 +9,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static service.FileBackedTaskManager.FILENAME_CSV;
 
@@ -17,7 +19,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     @Override
     public FileBackedTaskManager createManager() {
         try {
-            return new FileBackedTaskManager(new FileBackedHistoryManager(File.createTempFile(FILENAME_CSV, ".temp")), File.createTempFile(FILENAME_CSV, ".temp"));
+            return new FileBackedTaskManager(File.createTempFile(FILENAME_CSV, ".temp"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -57,5 +59,16 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         taskManager.addNewTask(t);
         FileBackedTaskManager m = FileBackedTaskManager.loadFromFile(new File(taskManager.getFilePath()));
         Assertions.assertEquals(taskManager, m, "loadFromFile не воссоздает копию");
+    }
+
+    @Test
+    void saveCSVWithDeletedTasks() {
+        taskManager.deleteAll();
+        taskManager.addNewTask(newTask());
+        try {
+            Assertions.assertEquals("TASK,4,Test description,NEW\r\n", Files.readString(Paths.get(taskManager.getFilePath())));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
