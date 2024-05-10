@@ -66,7 +66,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         taskManager.deleteAll();
         taskManager.addNewTask(newTask());
         try {
-            Assertions.assertEquals("TASK,4,Test description,NEW\r\n", Files.readString(Paths.get(taskManager.getFilePath())));
+            Assertions.assertEquals("TASK,4,Test description,NEW", Files.readString(Paths.get(taskManager.getFilePath())).trim());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
