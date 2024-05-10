@@ -65,4 +65,35 @@ public class Task {
         return task;
     }
 
+    @Override
+    public String toString() {
+        return "TASK," + getId() + "," + getDesc() + "," + getStatus();
+    }
+
+    public static Task fromString(String value) {
+        final String[] columns = value.split(",");
+        String name = columns[0];
+        int id = Integer.parseInt(columns[1]);
+        String description = columns[2];
+        TaskStatus status = TaskStatus.valueOf(columns[3]);
+        TaskType type = TaskType.valueOf(columns[0]);
+        return switch (type) {
+            case TASK -> {
+                Task t = new Task(name, status, description);
+                t.setId(id);
+                yield t;
+            }
+            case SUBTASK -> {
+                int epic = Integer.parseInt(columns[4]);
+                SubTask t = new SubTask(name, status, description, epic);
+                t.setId(id);
+                yield t;
+            }
+            case EPIC -> {
+                Epic t = new Epic(name, status, description);
+                t.setId(id);
+                yield t;
+            }
+        };
+    }
 }

@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DisplayName("TaskManagerTest")
 abstract class TaskManagerTest<T extends TaskManager> {
-
     protected T taskManager;
 
     public abstract T createManager();
@@ -34,7 +33,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         SubTask subTask = newSubTask(epic);
         taskManager.addNewSubTask(subTask);
     }
-
 
     protected Task newTask() {
         return new Task("Test", TaskStatus.NEW, "Test description");

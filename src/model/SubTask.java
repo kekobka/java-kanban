@@ -27,4 +27,9 @@ public class SubTask extends Task {
         task.setId(getId());
         return task;
     }
+
+    @Override
+    public String toString() {
+        return "SUBTASK," + getId() + "," + getDesc() + "," + getStatus() + "," + getEpicId();
+    }
 }
