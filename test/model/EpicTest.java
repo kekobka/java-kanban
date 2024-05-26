@@ -18,10 +18,53 @@ class EpicTest {
         assertEquals(taskExpected, task, "Эпики должны совпадать");
     }
 
+    protected SubTask newSubTask(TaskStatus status, Epic epic) {
+        return new SubTask("Test", status, "Test description", epic.getId());
+    }
 
     @Test
     void fromString() {
-        Task t = Task.fromString("EPIC,0,Test description,NEW");
-        assertInstanceOf(Epic.class, t, "не является экземпляром класса Epic");
+        Task from = new Epic("Test", TaskStatus.NEW, "Test description");
+        Task to = Task.fromString(from.toString());
+        assertInstanceOf(Epic.class, to, "не является экземпляром класса Epic");
+        assertEquals(from, to, "не является копией исходника");
+    }
+
+    @Test
+    void checkEpicStatusNEW() {
+        Epic epic = new Epic("name", TaskStatus.NEW, "desc");
+        epic.addSubTask(newSubTask(TaskStatus.NEW, epic));
+        epic.addSubTask(newSubTask(TaskStatus.NEW, epic));
+        epic.addSubTask(newSubTask(TaskStatus.NEW, epic));
+        assertEquals(TaskStatus.NEW, epic.getStatus(), "Статус эпика должен быть NEW");
+    }
+
+    @Test
+    void checkEpicStatusDONE() {
+        Epic epic = new Epic("name", TaskStatus.NEW, "desc");
+        epic.addSubTask(newSubTask(TaskStatus.DONE, epic));
+        epic.addSubTask(newSubTask(TaskStatus.DONE, epic));
+        epic.addSubTask(newSubTask(TaskStatus.DONE, epic));
+        assertEquals(TaskStatus.DONE, epic.getStatus(), "Статус эпика должен быть DONE");
+    }
+
+    @Test
+    void checkEpicStatusNEW_DONE() {
+        Epic epic = new Epic("name", TaskStatus.NEW, "desc");
+        epic.addSubTask(newSubTask(TaskStatus.NEW, epic));
+        epic.addSubTask(newSubTask(TaskStatus.DONE, epic));
+        epic.addSubTask(newSubTask(TaskStatus.NEW, epic));
+        epic.addSubTask(newSubTask(TaskStatus.DONE, epic));
+        assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus(), "Статус эпика должен быть IN_PROGRESS");
+    }
+
+    @Test
+    void checkEpicStatusIN_PROGRESS() {
+        Epic epic = new Epic("name", TaskStatus.NEW, "desc");
+        epic.addSubTask(newSubTask(TaskStatus.IN_PROGRESS, epic));
+        epic.addSubTask(newSubTask(TaskStatus.IN_PROGRESS, epic));
+        epic.addSubTask(newSubTask(TaskStatus.IN_PROGRESS, epic));
+        epic.addSubTask(newSubTask(TaskStatus.IN_PROGRESS, epic));
+        assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus(), "Статус эпика должен быть IN_PROGRESS");
     }
 }

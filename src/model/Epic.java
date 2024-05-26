@@ -1,6 +1,8 @@
 package model;
 
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 
@@ -11,6 +13,9 @@ public class Epic extends Task {
         super(name, status, description);
     }
 
+    public Epic(String name, TaskStatus status, String description, LocalDateTime startTime, Duration duration) {
+        super(name, status, description, startTime, duration);
+    }
 
     public void addSubTask(SubTask subTask) {
         subTask.setEpicId(getId());
@@ -70,6 +75,6 @@ public class Epic extends Task {
                 subtasks.append(",").append(t.getId());
             }
         }
-        return "EPIC," + getId() + "," + getDesc() + "," + getStatus() + subtasks;
+        return "EPIC," + getId() + "," + getDesc() + "," + getStatus() + "," + getStartTime() + "," + getDuration() + subtasks;
     }
 }

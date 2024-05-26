@@ -64,9 +64,10 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     @Test
     void saveCSVWithDeletedTasks() {
         taskManager.deleteAll();
-        taskManager.addNewTask(newTask());
+        int id = taskManager.addNewTask(newTask());
+        Task task = taskManager.getTask(id);
         try {
-            Assertions.assertEquals("TASK,4,Test description,NEW", Files.readString(Paths.get(taskManager.getFilePath())).trim());
+            Assertions.assertEquals(task.toString(), Files.readString(Paths.get(taskManager.getFilePath())).trim());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -1,18 +1,23 @@
 package service;
 
+import exception.ManagerOverlappingException;
 import model.Epic;
 import model.SubTask;
 import model.Task;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeSet;
 
 public class InMemoryTaskManager implements TaskManager {
     protected final HashMap<Integer, Task> tasks;
     protected final HashMap<Integer, Epic> epics;
     protected final HashMap<Integer, SubTask> subtasks;
+    protected final TreeSet<Task> prioritizedTasks;
     private final HistoryManager historyManager;
+
     private int seq = 0;
 
     private int generateId() {
@@ -24,15 +29,36 @@ public class InMemoryTaskManager implements TaskManager {
         this.tasks = new HashMap<>();
         this.epics = new HashMap<>();
         this.subtasks = new HashMap<>();
+        this.prioritizedTasks = new TreeSet<>(((task1, task2) -> {
+            if (task1.getEndTime().isBefore(task2.getStartTime())) {
+                return -1;
+            } else if (task1.getStartTime().isAfter(task2.getEndTime())) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }));
+    }
 
+    public boolean isNotOverlapping(Task task) {
+        if (task.getDuration() == Duration.ZERO) {
+            return true;
+        }
+        int sizeBefore = prioritizedTasks.size();
+        prioritizedTasks.add(task);
+        return prioritizedTasks.size() != sizeBefore;
     }
 
     @Override
     public int addNewTask(Task task) {
         int id = generateId();
         task.setId(id);
-        tasks.put(id, task);
-        return id;
+        if (isNotOverlapping(task)) {
+            tasks.put(id, task);
+            return id;
+        } else {
+            throw new ManagerOverlappingException(task.getName() + " пересекается");
+        }
     }
 
     @Override
@@ -55,11 +81,15 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public int addNewEpic(Epic epic) {
+    public int addNewEpic(Epic task) {
         int id = generateId();
-        epic.setId(id);
-        epics.put(id, epic);
-        return id;
+        task.setId(id);
+        if (isNotOverlapping(task)) {
+            epics.put(id, task);
+            return id;
+        } else {
+            throw new ManagerOverlappingException(task.getName() + " пересекается");
+        }
     }
 
     @Override
@@ -100,14 +130,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int addNewSubTask(SubTask task) {
-        int sid = generateId();
-        task.setId(sid);
-        subtasks.put(sid, task);
-        int epicId = task.getEpicId();
-        if (epicId != 0) {
-            epics.get(epicId).addSubTask(task);
+        int id = generateId();
+        task.setId(id);
+
+        if (isNotOverlapping(task)) {
+            subtasks.put(id, task);
+            int epicId = task.getEpicId();
+            if (epicId != 0) {
+                epics.get(epicId).addSubTask(task);
+            }
+            return id;
+        } else {
+            throw new ManagerOverlappingException(task.getName() + " пересекается");
         }
-        return sid;
     }
 
     @Override
@@ -181,11 +216,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public String toString() {
-        return "InMemoryTaskManager{" +
-                "tasks=" + tasks +
-                ", epics=" + epics +
-                ", subtasks=" + subtasks +
-                '}';
+        return "InMemoryTaskManager{" + "tasks=" + tasks + ", epics=" + epics + ", subtasks=" + subtasks + '}';
     }
 
     @Override
@@ -207,5 +238,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public HashMap<Integer, SubTask> getSubTasks() {
         return subtasks;
+    }
+
+    @Override
+    public TreeSet<Task> getPrioritizedTasks() {
+        return new TreeSet<>(prioritizedTasks);
     }
 }
