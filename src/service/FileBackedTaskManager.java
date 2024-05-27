@@ -13,7 +13,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public static final String FILENAME_CSV = "tasks.csv";
-
     private final File file;
 
     public static FileBackedTaskManager loadFromFile(File file) {
@@ -136,7 +135,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 } else if (task instanceof Epic epic) {
                     epics.put(id, epic);
                     final String[] columns = line.split(",");
-                    for (int i = 4; i < columns.length; i++) {
+                    for (int i = 6; i < columns.length; i++) {
                         epic.addSubTask(subtasks.get(Integer.parseInt(columns[i])));
                     }
                 } else {

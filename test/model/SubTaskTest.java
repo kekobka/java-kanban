@@ -20,7 +20,9 @@ class SubTaskTest {
 
     @Test
     void fromString() {
-        Task t = Task.fromString("SUBTASK,0,Test description,NEW,0");
-        assertInstanceOf(SubTask.class, t, "не является экземпляром класса SubTask");
+        Task from = new SubTask("Test", TaskStatus.NEW, "Test description");
+        Task to = Task.fromString(from.toString());
+        assertInstanceOf(SubTask.class, to, "не является экземпляром класса SubTask");
+        assertEquals(from, to, "не является копией исходника");
     }
 }

@@ -1,6 +1,8 @@
 package model;
 
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 
@@ -11,6 +13,9 @@ public class Epic extends Task {
         super(name, status, description);
     }
 
+    public Epic(String name, TaskStatus status, String description, LocalDateTime startTime, Duration duration) {
+        super(name, status, description, startTime, duration);
+    }
 
     public void addSubTask(SubTask subTask) {
         subTask.setEpicId(getId());
@@ -30,10 +35,20 @@ public class Epic extends Task {
     public void calculateEpicStatus() {
         boolean isdone = true;
         boolean isnew = true;
+
+        LocalDateTime first = LocalDateTime.MAX;
+        Duration duration = Duration.ZERO;
+
         for (SubTask sTask : subTasks) {
+            if (first.isAfter(sTask.getStartTime())) {
+                first = sTask.getStartTime();
+            }
+            duration = duration.plus(sTask.getDuration());
+
             if (sTask.getStatus() != TaskStatus.DONE) {
                 isdone = false;
             }
+
             if (sTask.getStatus() != TaskStatus.NEW) {
                 isnew = false;
             }
@@ -47,6 +62,9 @@ public class Epic extends Task {
             return;
         }
         setStatus(TaskStatus.IN_PROGRESS);
+
+        setStartTime(first);
+        setDuration(duration);
     }
 
     @Override
@@ -70,6 +88,6 @@ public class Epic extends Task {
                 subtasks.append(",").append(t.getId());
             }
         }
-        return "EPIC," + getId() + "," + getDesc() + "," + getStatus() + subtasks;
+        return "EPIC," + getId() + "," + getDesc() + "," + getStatus() + "," + getStartTime() + "," + getDuration() + subtasks;
     }
 }

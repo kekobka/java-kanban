@@ -7,6 +7,7 @@ import model.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeSet;
 
 public interface TaskManager {
 
@@ -53,4 +54,5 @@ public interface TaskManager {
 
     HashMap<Integer, SubTask> getSubTasks();
 
+    TreeSet<Task> getPrioritizedTasks();
 }

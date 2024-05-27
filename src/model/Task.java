@@ -1,17 +1,30 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Task {
 
     private int id;
     private String name;
     private TaskStatus status;
     private String desc;
-
+    private LocalDateTime startTime; // LocalDateTime
+    private Duration duration;
+    private LocalDateTime endTime;
 
     public Task(String name, TaskStatus status, String description) {
+        this(name, status, description, LocalDateTime.now(), Duration.ZERO);
+    }
+
+    public Task(String name, TaskStatus status, String description, LocalDateTime startTime, Duration duration) {
         this.name = name;
         this.status = status;
         this.desc = description;
+
+        this.startTime = startTime;
+        this.duration = duration;
+        this.endTime = startTime.plus(duration);
     }
 
     public int getId() {
@@ -60,14 +73,14 @@ public class Task {
 
     @Override
     public Task clone() {
-        Task task = new Task(name, status, desc);
+        Task task = new Task(name, status, desc, startTime, duration);
         task.setId(id);
         return task;
     }
 
     @Override
     public String toString() {
-        return "TASK," + getId() + "," + getDesc() + "," + getStatus();
+        return "TASK," + getId() + "," + getDesc() + "," + getStatus() + "," + startTime + "," + duration;
     }
 
     public static Task fromString(String value) {
@@ -77,23 +90,49 @@ public class Task {
         String description = columns[2];
         TaskStatus status = TaskStatus.valueOf(columns[3]);
         TaskType type = TaskType.valueOf(columns[0]);
+        LocalDateTime startTime = LocalDateTime.parse(columns[4]);
+        Duration duration = Duration.parse(columns[5]);
         return switch (type) {
             case TASK -> {
-                Task t = new Task(name, status, description);
+                Task t = new Task(name, status, description, startTime, duration);
                 t.setId(id);
                 yield t;
             }
             case SUBTASK -> {
-                int epic = Integer.parseInt(columns[4]);
-                SubTask t = new SubTask(name, status, description, epic);
+                int epic = Integer.parseInt(columns[6]);
+                SubTask t = new SubTask(name, status, description, epic, startTime, duration);
                 t.setId(id);
                 yield t;
             }
             case EPIC -> {
-                Epic t = new Epic(name, status, description);
+                Epic t = new Epic(name, status, description, startTime, duration);
                 t.setId(id);
                 yield t;
             }
         };
     }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+        this.endTime = startTime.plus(duration);
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+        this.endTime = startTime.plus(duration);
+    }
+
+
 }

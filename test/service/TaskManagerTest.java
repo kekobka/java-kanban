@@ -1,5 +1,6 @@
 package service;
 
+import exception.ManagerOverlappingException;
 import model.Epic;
 import model.SubTask;
 import model.Task;
@@ -8,10 +9,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @DisplayName("TaskManagerTest")
@@ -21,14 +23,14 @@ abstract class TaskManagerTest<T extends TaskManager> {
     public abstract T createManager();
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         taskManager = createManager();
 
         Task task = newTask();
         taskManager.addNewTask(task);
 
         Epic epic = newEpic();
-        int epicId = taskManager.addNewEpic(epic);
+        taskManager.addNewEpic(epic);
 
         SubTask subTask = newSubTask(epic);
         taskManager.addNewSubTask(subTask);
@@ -113,12 +115,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void deleteAll() {
         taskManager.deleteAll();
+
         assertManagerMaps(0, 0, 0);
     }
 
     @Test
     void deleteAllTask() {
-
         taskManager.deleteAllTask();
 
         assertManagerMaps(0, 1, 1);
@@ -138,5 +140,32 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         final HashMap<Integer, Task> tasks = taskManager.getTasks();
         assertManagerMaps(1, 0, 1);
+    }
+
+    @Test
+    void isOverlapping() {
+        Task task = newTask();
+        task.setDuration(Duration.ofMinutes(15));
+        taskManager.addNewTask(task);
+
+        assertThrows(ManagerOverlappingException.class, () -> {
+            Task task2 = newTask();
+            task2.setDuration(Duration.ofMinutes(15));
+            taskManager.addNewTask(task2);
+        });
+    }
+
+    @Test
+    void isNotOverlapping() {
+        Task task = newTask();
+        task.setStartTime(LocalDateTime.now().plusMinutes(15));
+        task.setDuration(Duration.ofMinutes(15));
+        taskManager.addNewTask(task);
+
+        assertDoesNotThrow(() -> {
+            Task task2 = newTask();
+            task2.setDuration(Duration.ofMinutes(14));
+            taskManager.addNewTask(task2);
+        });
     }
 }
