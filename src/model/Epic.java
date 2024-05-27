@@ -35,10 +35,20 @@ public class Epic extends Task {
     public void calculateEpicStatus() {
         boolean isdone = true;
         boolean isnew = true;
+
+        LocalDateTime first = LocalDateTime.MAX;
+        Duration duration = Duration.ZERO;
+
         for (SubTask sTask : subTasks) {
+            if (first.isAfter(sTask.getStartTime())) {
+                first = sTask.getStartTime();
+            }
+            duration = duration.plus(sTask.getDuration());
+
             if (sTask.getStatus() != TaskStatus.DONE) {
                 isdone = false;
             }
+
             if (sTask.getStatus() != TaskStatus.NEW) {
                 isnew = false;
             }
@@ -52,6 +62,9 @@ public class Epic extends Task {
             return;
         }
         setStatus(TaskStatus.IN_PROGRESS);
+
+        setStartTime(first);
+        setDuration(duration);
     }
 
     @Override

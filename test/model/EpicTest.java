@@ -3,6 +3,9 @@ package model;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
@@ -66,5 +69,23 @@ class EpicTest {
         epic.addSubTask(newSubTask(TaskStatus.IN_PROGRESS, epic));
         epic.addSubTask(newSubTask(TaskStatus.IN_PROGRESS, epic));
         assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus(), "Статус эпика должен быть IN_PROGRESS");
+    }
+
+    @Test
+    void epicTime() {
+        Epic epic = new Epic("name", TaskStatus.NEW, "desc");
+        SubTask s = newSubTask(TaskStatus.IN_PROGRESS, epic);
+        LocalDateTime time = LocalDateTime.now();
+        s.setStartTime(time);
+        s.setDuration(Duration.ofMinutes(15));
+        epic.addSubTask(s);
+
+        SubTask s2 = newSubTask(TaskStatus.IN_PROGRESS, epic);
+        s2.setStartTime(time);
+        s2.setDuration(Duration.ofMinutes(15));
+        epic.addSubTask(s2);
+        assertEquals(Duration.ofMinutes(30), epic.getDuration(), "длительность epic должна быть равна длительности всем subtask");
+        assertEquals(time, epic.getStartTime(), "время начала epic должно быть в начале первого по времени subtask");
+        assertEquals(time.plus(Duration.ofMinutes(30)), epic.getEndTime(), "время конца epic должно быть в конца последнего по времени subtask");
     }
 }
