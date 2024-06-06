@@ -10,11 +10,15 @@ public class Task {
     private TaskStatus status;
     private String desc;
     private LocalDateTime startTime; // LocalDateTime
-    private Duration duration;
+    private long duration;
     private LocalDateTime endTime;
 
     public Task(String name, TaskStatus status, String description) {
         this(name, status, description, LocalDateTime.now(), Duration.ZERO);
+    }
+
+    public Task(String name, TaskStatus status, String description, LocalDateTime startTime, long duration) {
+        this(name, status, description, startTime, Duration.ofMinutes(duration));
     }
 
     public Task(String name, TaskStatus status, String description, LocalDateTime startTime, Duration duration) {
@@ -23,9 +27,10 @@ public class Task {
         this.desc = description;
 
         this.startTime = startTime;
-        this.duration = duration;
+        this.duration = duration.toMinutes();
         this.endTime = startTime.plus(duration);
     }
+
 
     public int getId() {
         return id;
@@ -73,7 +78,7 @@ public class Task {
 
     @Override
     public Task clone() {
-        Task task = new Task(name, status, desc, startTime, duration);
+        Task task = new Task(name, status, desc, startTime, Duration.ofMinutes(duration));
         task.setId(id);
         return task;
     }
@@ -91,7 +96,7 @@ public class Task {
         TaskStatus status = TaskStatus.valueOf(columns[3]);
         TaskType type = TaskType.valueOf(columns[0]);
         LocalDateTime startTime = LocalDateTime.parse(columns[4]);
-        Duration duration = Duration.parse(columns[5]);
+        Duration duration = Duration.ofMinutes(Integer.parseInt(columns[5]));
         return switch (type) {
             case TASK -> {
                 Task t = new Task(name, status, description, startTime, duration);
@@ -117,11 +122,11 @@ public class Task {
     }
 
     public Duration getDuration() {
-        return duration;
+        return Duration.ofMinutes(duration);
     }
 
     public void setDuration(Duration duration) {
-        this.duration = duration;
+        this.duration = duration.toMinutes();
         this.endTime = startTime.plus(duration);
     }
 
@@ -131,8 +136,7 @@ public class Task {
 
     public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
-        this.endTime = startTime.plus(duration);
+        this.endTime = startTime.plus(Duration.ofMinutes(duration));
     }
-
 
 }
