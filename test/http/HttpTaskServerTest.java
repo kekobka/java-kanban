@@ -83,7 +83,7 @@ class HttpTaskServerTest {
         if (res.statusCode() == 201) {
             try {
                 task.setId(Integer.parseInt(res.body()));
-            } catch (NumberFormatException _) {
+            } catch (NumberFormatException e) {
             }
         }
         return res;
