@@ -9,6 +9,10 @@ import java.util.ArrayList;
 public class Epic extends Task {
     private final ArrayList<SubTask> subTasks = new ArrayList<>();
 
+    public Epic(String name, String description) {
+        super(name, TaskStatus.NEW, description);
+    }
+
     public Epic(String name, TaskStatus status, String description) {
         super(name, status, description);
     }
@@ -88,6 +92,6 @@ public class Epic extends Task {
                 subtasks.append(",").append(t.getId());
             }
         }
-        return "EPIC," + getId() + "," + getDesc() + "," + getStatus() + "," + getStartTime() + "," + getDuration() + subtasks;
+        return "EPIC," + getId() + "," + getDesc() + "," + getStatus() + "," + getStartTime() + "," + getDuration().toMinutes() + subtasks;
     }
 }
