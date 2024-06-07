@@ -9,6 +9,9 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 public class Managers {
+    private Managers() {
+    }
+
     public static TaskManager getDefaults() {
         return new InMemoryTaskManager(getDefaultHistory());
     }
